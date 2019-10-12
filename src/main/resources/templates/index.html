@@ -21,8 +21,10 @@
                             <thead class="thead-inverse">
                             <tr>
                                 <th>ID</th>
-                                <th>Description</th>
-                                <th>View</th>
+                                <th>DESCREIPTION</th>
+                                <th>VIEW</th>
+                                <th>UPDATE</th>
+                                <th>DELETE</th>
                             </tr>
                             </thead>
                             <tr th:remove="all">
@@ -33,7 +35,9 @@
                             <tr th:each="recipe : ${recipes}">
                                 <td th:text="${recipe.id}">334</td>
                                 <td th:text="${recipe.description}">Tasty Goodnees 3</td>
-                                <td><a href="#" th:href="@{'/recipe/show/' + ${recipe.id}}">View</a></td>
+                                <td><a href="#" th:href="@{'/recipe/' + ${recipe.id}}+'/show'">View</a></td>
+                                <td><a  th:href="@{'/recipe/' + ${recipe.id}}+'/update'">Update</a></td>
+                                <td><a  th:href="@{'/recipe/' + ${recipe.id}}+'/delete'">Delete</a></td>
                             </tr>
                         </table>
                     </div>
