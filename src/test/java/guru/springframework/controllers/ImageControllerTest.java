@@ -35,7 +35,7 @@ public class ImageControllerTest {
         MockitoAnnotations.initMocks(this);
 
         controller = new ImageController(imageService, recipeService);
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(controller).setControllerAdvice(new ControllerExceptionHandler()).build();
     }
 
     @Test
@@ -50,9 +50,16 @@ public class ImageControllerTest {
                 .andExpect(model().attributeExists("recipe"));
 
         verify(recipeService, times(1)).findCommandById(anyLong());
-
     }
 
+    @Test
+    public void testGetRecipeNumberFormatException() throws Exception {
+
+        mockMvc.perform(get("/recipe/asdf/image"))
+                .andExpect(status().isBadRequest())
+                .andExpect(view().name("400error"));
+    }
+    
     @Test
     public void handleImagePost() throws Exception {
         MockMultipartFile multipartFile =
