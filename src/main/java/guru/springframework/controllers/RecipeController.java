@@ -1,8 +1,11 @@
 package guru.springframework.controllers;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -46,11 +49,20 @@ public class RecipeController {
     }
     
     @PostMapping("recipe")
-    public String saveOrUpdate(@ModelAttribute RecipeCommand command){
-        RecipeCommand savedCommand = recipeService.saveRecipeCommand(command);
+    public String saveOrUpdate(@Valid @ModelAttribute("recipe") RecipeCommand command, BindingResult bindingResult){
+    	 if(bindingResult.hasErrors()){
 
-        return "redirect:/recipe/" + savedCommand.getId() + "/show";
-    }
+             bindingResult.getAllErrors().forEach(objectError -> {
+                 log.debug(objectError.toString());
+             });
+
+             return "recipes/recipeform";
+         }
+
+         RecipeCommand savedCommand = recipeService.saveRecipeCommand(command);
+
+         return "redirect:/recipe/" + savedCommand.getId() + "/show";
+     }
     
     @GetMapping("recipe/{id}/delete")
     public String deleteById(@PathVariable String id){
